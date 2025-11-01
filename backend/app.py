@@ -8,6 +8,8 @@ from io import StringIO
 from datetime import datetime, timedelta
 from collections import Counter, defaultdict
 from werkzeug.security import generate_password_hash, check_password_hash
+from fpdf import FPDF
+from io import BytesIO
 
 # Optional geoip2 — used if user installs MaxMind DB and geoip2 package
 try:
