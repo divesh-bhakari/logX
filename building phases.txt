@@ -1,0 +1,128 @@
+🧩 PHASE 1 — Base Setup
+
+Goal: Get Flask backend and static frontend pages working together.
+
+Frontend (index.html)
+
+Header: “LogX – The Log Sentinel”
+
+Info section explaining the purpose of log analysis
+
+Buttons for “System Logs”, “Server Logs”, etc.
+
+File upload input (accept .log, .txt, .csv)
+
+Textarea to paste logs
+
+Button: “Analyze Logs”
+
+Links: “Login” and “Register”
+
+Backend (app.py)
+
+Flask app with /upload route
+
+Accept files or pasted logs (POST request)
+
+Save uploaded logs to /uploads
+
+Return “Upload Successful” JSON
+
+Basic index route to test API
+
+⚙️ PHASE 2 — Log Analysis Engine
+
+Goal: Extract meaningful information from uploaded or pasted logs.
+
+In app.py:
+
+Read log file line-by-line.
+
+Use regex to detect:
+
+Error, Warning, Info counts
+
+IP addresses
+
+HTTP status codes
+
+Timestamps or failed login attempts
+
+Summarize analysis into dictionary:
+
+result = {
+    "total_lines": 250,
+    "errors": 10,
+    "warnings": 18,
+    "unique_ips": ["192.168.0.1", "10.0.0.5"],
+    "top_status_codes": { "404": 4, "500": 1 }
+}
+
+
+Save results as JSON in /reports
+
+Redirect user to result.html with the summary.
+
+🔐 PHASE 3 — Authentication (Login & Register)
+
+Goal: Add simple user authentication with SQLite.
+
+/register → save name, email, password hash
+
+/login → verify credentials and create session
+
+database.db stores users (SQLite)
+
+JS fetch() calls from login.html & register.html
+
+📊 PHASE 4 — Results Visualization
+
+Goal: Show analyzed data nicely on result.html.
+
+Frontend (result.html)
+
+Displays results like:
+
+Number of errors, warnings, IPs
+
+Simple pie chart (Chart.js or inline JS)
+
+Button: “Download Report (CSV)”
+
+Backend
+
+/result → returns JSON with analysis summary
+
+Allow downloading the CSV or JSON report
+
+📈 PHASE 5 — Power BI Integration (Future)
+
+Goal: Connect generated reports to Power BI.
+
+Export report data to /reports/ as CSV
+
+Connect Power BI dashboard
+
+Embed dashboard iframe inside result.html
+
+🤖 PHASE 6 — AI Insights (Future)
+
+Goal: Add AI-based log summarization.
+
+Small ML model (local or OpenAI API)
+
+Generate text summary like:
+
+“3 IPs caused repeated 401 errors — possible brute-force attempts.”
+
+Display in result.html as “AI Insights” section
+
+⚡ PHASE 7 — Advanced Features (Optional)
+
+Real-time log streaming (live tail view)
+
+Email alerts
+
+Dark theme UI
+
+Admin dashboard for reports

@@ -69,10 +69,6 @@
       border-radius: 6px;
       border: 1px solid #30363d;
       display: none;
-      white-space: pre-wrap;
-    }
-    .log-type-btn.active {
-      background: #1f6feb;
     }
   </style>
 </head>
@@ -83,13 +79,13 @@
     <p>Upload system or server logs to detect anomalies, errors, and patterns. Paste logs or upload files below.</p>
 
     <label>Select Log Type:</label><br>
-    <button type="button" class="log-type-btn" onclick="setType('system')">System Logs</button>
-    <button type="button" class="log-type-btn" onclick="setType('server')">Server Logs</button>
-    <button type="button" class="log-type-btn" onclick="setType('custom')">Custom Logs</button>
+    <button onclick="setType('system')">System Logs</button>
+    <button onclick="setType('server')">Server Logs</button>
+    <button onclick="setType('custom')">Custom Logs</button>
 
     <form id="uploadForm" enctype="multipart/form-data">
-      <input type="file" id="logFile" name="file" accept=".log,.txt,.csv"><br>
-      <textarea id="pasted_logs" name="pasted_logs" placeholder="Or paste your log content here..."></textarea><br>
+      <input type="file" id="logFile" name="logFile" accept=".log,.txt,.csv"><br>
+      <textarea id="logText" placeholder="Or paste your log content here..."></textarea><br>
       <button type="submit">Analyze Logs</button>
     </form>
 
@@ -100,45 +96,29 @@
   </footer>
 
   <script>
-    let selectedType = "custom";
+document.getElementById("analyzeBtn").addEventListener("click", async () => {
+  const fileInput = document.getElementById("logFile");
+  const logType = document.querySelector('input[name="logType"]:checked')?.value || "custom";
+  const pastedLogs = document.getElementById("pastedLogs").value;
+  const formData = new FormData();
 
-    function setType(type) {
-      selectedType = type;
-      document.querySelectorAll('.log-type-btn').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
-    }
+  if (fileInput.files.length > 0) {
+    formData.append("file", fileInput.files[0]);
+  } else if (pastedLogs.trim()) {
+    formData.append("pasted_logs", pastedLogs);
+  } else {
+    alert("Please upload or paste logs first!");
+    return;
+  }
 
-    document.getElementById("uploadForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const fileInput = document.getElementById("logFile");
-      const pastedLogs = document.getElementById("pasted_logs").value;
-      const responseDiv = document.getElementById("response");
+  formData.append("log_type", logType);
 
-      const formData = new FormData();
+  const res = await fetch("/upload", { method: "POST", body: formData });
+  const data = await res.json();
+  console.log(data);
+  alert("Analysis complete! Check console for details.");
+});
+</script>
 
-      if (fileInput.files.length > 0) {
-        formData.append("file", fileInput.files[0]);
-      } else if (pastedLogs.trim()) {
-        formData.append("pasted_logs", pastedLogs);
-      } else {
-        alert("Please upload or paste logs first!");
-        return;
-      }
-
-      formData.append("log_type", selectedType);
-
-      responseDiv.style.display = "block";
-      responseDiv.innerHTML = "⏳ Analyzing logs...";
-
-      try {
-        const res = await fetch("/upload", { method: "POST", body: formData });
-        const data = await res.json();
-        if (data.error) throw new Error(data.error);
-        responseDiv.innerHTML = "✅ <b>Analysis Result:</b><br><pre>" + JSON.stringify(data.result, null, 2) + "</pre>";
-      } catch (err) {
-        responseDiv.innerHTML = "❌ Error: " + err.message;
-      }
-    });
-  </script>
 </body>
 </html>
