@@ -76,7 +76,6 @@
     display: block;
   }
 
-  select,
   input[type="file"],
   textarea {
     width: 100%;
@@ -138,7 +137,6 @@
   footer a:hover {
     text-decoration: underline;
   }
-
 </style>
 </head>
 <body>
@@ -154,13 +152,6 @@
 <main>
   <h2>Upload or Paste Logs for Analysis</h2>
   <form id="uploadForm" method="post" enctype="multipart/form-data">
-    <label for="logType">Choose Log Type:</label>
-    <select id="logType" name="log_type">
-      <option value="custom">Custom</option>
-      <option value="server">Server</option>
-      <option value="system">System</option>
-    </select>
-
     <label for="logFile">Upload Log File:</label>
     <input type="file" id="logFile" name="file" />
 
@@ -178,32 +169,30 @@
 </footer>
 
 <script>
-document.getElementById("uploadForm").addEventListener("submit", async function(e){
+document.getElementById("uploadForm").addEventListener("submit", async function(e) {
   e.preventDefault();
-  
+
   const fileInput = document.getElementById("logFile");
   const pastedLogs = document.getElementById("logText").value.trim();
-  const logType = document.getElementById("logType").value;
   const responseDiv = document.getElementById("response");
 
   const formData = new FormData();
-  if(fileInput.files.length > 0){
+  if (fileInput.files.length > 0) {
     formData.append("file", fileInput.files[0]);
-  } else if(pastedLogs.length > 0) {
+  } else if (pastedLogs.length > 0) {
     formData.append("pasted_logs", pastedLogs);
   } else {
     responseDiv.style.display = "block";
     responseDiv.textContent = "⚠️ Please upload a file or paste log data before analyzing.";
     return;
   }
-  formData.append("log_type", logType);
 
   try {
     const response = await fetch("/upload", {
       method: "POST",
       body: formData
     });
-    if(!response.ok){
+    if (!response.ok) {
       const error = await response.json();
       responseDiv.style.display = "block";
       responseDiv.textContent = error.error || "Failed to analyze logs.";

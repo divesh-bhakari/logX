@@ -1,0 +1,125 @@
+{
+  "total_lines": 5,
+  "warnings": 3,
+  "info": 1,
+  "unique_ips": [
+    "198.51.100.12",
+    "203.0.113.99"
+  ],
+  "top_ips": {
+    "198.51.100.12": 2,
+    "203.0.113.99": 2
+  },
+  "status_codes_raw": [
+    "401",
+    "198",
+    "100",
+    "402",
+    "198",
+    "100",
+    "203",
+    "113",
+    "203",
+    "113"
+  ],
+  "top_status_codes": {
+    "198": 2,
+    "100": 2,
+    "203": 2,
+    "113": 2,
+    "401": 1,
+    "402": 1
+  },
+  "timestamps": [
+    "2025-11-01 15:05:27",
+    "2025-11-01 15:16:20",
+    "2025-11-01 15:21:09"
+  ],
+  "timeline": [
+    {
+      "bucket": "2025-11-01 15:05",
+      "count": 2
+    },
+    {
+      "bucket": "2025-11-01 15:16",
+      "count": 1
+    },
+    {
+      "bucket": "2025-11-01 15:21",
+      "count": 2
+    }
+  ],
+  "http_methods_count": {
+    "POST": 1,
+    "GET": 1
+  },
+  "top_endpoints": {
+    "/comments": 1,
+    "/product/53?ref=...": 1
+  },
+  "file_paths_sample": [
+    "/comments",
+    "/script",
+    "/product/53"
+  ],
+  "key_value_pairs_count": 9,
+  "key_value_pairs_sample": [
+    {
+      "param": "comment"
+    },
+    {
+      "value": "<script>document.cookie</script>"
+    },
+    {
+      "session": "ses_4f3a2c"
+    },
+    {
+      "ref": "..."
+    },
+    {
+      "client": "203.0.113.99"
+    },
+    {
+      "id": "alert_20251101_152109"
+    },
+    {
+      "type": "stored-xss"
+    },
+    {
+      "src_ip": "203.0.113.99"
+    },
+    {
+      "severity": "medium"
+    }
+  ],
+  "response_size_bytes": {
+    "count": 3,
+    "min": 12,
+    "max": 99,
+    "avg": 41.0
+  },
+  "attack_summary": {
+    "xss_samples": [
+      {
+        "line_no": 1,
+        "snippet": "2025-11-01 15:05:27,401 app WARNING SuspiciousInput: POST /comments from 198.51.100.12 - param=comment - value=\"<script>document.cookie</script>\""
+      }
+    ],
+    "xss_count": 1
+  },
+  "security_summary": {
+    "risk_score": 35,
+    "messages": [
+      "Low-medium risk \u2014 monitor and check notable warnings.",
+      "Detected 3 warnings.",
+      "XSS indicators: 1 samples."
+    ]
+  },
+  "format_candidates": [
+    "web_access_log"
+  ],
+  "format_guess": "web_access_log",
+  "detected_format": "web_access_log",
+  "log_type_detected": "web_access_log",
+  "generated_at": "2025-11-01 12:04:21 UTC"
+}

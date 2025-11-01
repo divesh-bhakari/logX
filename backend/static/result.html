@@ -1,61 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>LogX — Analysis Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 <style>
-body {
-  background-color: #0d1117;
-  color: #e6edf3;
-  font-family: 'Inter', sans-serif;
-}
-.card {
-  background-color: #161b22;
-  border: 1px solid #30363d;
-  border-radius: 12px;
-  padding: 15px;
-  box-shadow: 0 0 12px rgba(0,0,0,0.4);
-  transition: all 0.3s ease;
-}
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0 18px rgba(56,139,253,0.4);
-}
-h1, h2, h3 {
-  color: #58a6ff;
-}
-.btn {
-  background-color: #238636;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 6px;
-  font-weight: bold;
-  transition: 0.2s;
-}
-.btn:hover { background-color: #2ea043; }
-.section-title {
-  border-left: 4px solid #58a6ff;
-  padding-left: 8px;
-  margin-bottom: 10px;
-  font-weight: 600;
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-th, td {
-  border: 1px solid #30363d;
-  padding: 8px;
-  text-align: left;
-}
-th {
-  background-color: #21262d;
-}
+  body {
+    background-color: #0d1117;
+    color: #e6edf3;
+    font-family: 'Inter', sans-serif;
+  }
+  .card {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.4);
+    transition: all 0.3s ease;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 18px rgba(56,139,253,0.4);
+  }
+  h1, h2, h3 {
+    color: #58a6ff;
+  }
+  .btn {
+    background-color: #238636;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: 0.2s;
+  }
+  .btn:hover { background-color: #2ea043; }
+  .section-title {
+    border-left: 4px solid #58a6ff;
+    padding-left: 8px;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  th, td {
+    border: 1px solid #30363d;
+    padding: 8px;
+    text-align: left;
+  }
+  th {
+    background-color: #21262d;
+  }
+  td.text-center {
+    text-align: center;
+    color: #888;
+  }
 </style>
 </head>
 <body class="p-6">
@@ -88,7 +92,7 @@ th {
     <section>
       <h2 class="section-title text-xl">🚨 Security Alerts</h2>
       <div id="securityAlerts" class="card text-sm text-gray-300">
-        <p>No security alerts detected.</p>
+        <p>No major security threats detected.</p>
       </div>
     </section>
 
@@ -96,19 +100,34 @@ th {
     <section class="grid md:grid-cols-2 gap-6">
       <div class="card">
         <h3 class="text-lg mb-2">Top IP Addresses</h3>
-        <table id="ipTable"><thead><tr><th>IP Address</th></tr></thead><tbody></tbody></table>
+        <table id="ipTable">
+          <thead>
+            <tr><th>IP Address</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
       </div>
 
       <div class="card">
         <h3 class="text-lg mb-2">Top Status Codes</h3>
-        <table id="statusTable"><thead><tr><th>Code</th><th>Count</th></tr></thead><tbody></tbody></table>
+        <table id="statusTable">
+          <thead>
+            <tr><th>Code</th><th>Count</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
       </div>
     </section>
 
     <!-- HTTP Endpoint Insights -->
     <section class="card">
       <h3 class="text-lg mb-2">Most Accessed Endpoints</h3>
-      <table id="endpointTable"><thead><tr><th>Endpoint</th><th>Hits</th></tr></thead><tbody></tbody></table>
+      <table id="endpointTable">
+        <thead>
+          <tr><th>Endpoint</th><th>Hits</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </section>
 
     <!-- Control Buttons -->
@@ -130,29 +149,39 @@ async function loadResults() {
   const summaryDiv = document.getElementById("summaryCards");
   const metrics = {
     "Total Lines": data.total_lines,
-    "Errors": data.errors,
-    "Warnings": data.warnings,
-    "Info": data.info,
-    "Failed Logins": data.failed_logins,
-    "Detected Log Type": data.detected_format || data.log_type,
+    "Errors": data.errors || 0,
+    "Warnings": data.warnings || 0,
+    "Info": data.info || 0,
+    "Failed Logins": data.failed_logins || 0,
+    "Detected Log Type": data.detected_format || data.log_type || "unknown",
     "Unique IPs": data.unique_ips ? data.unique_ips.length : 0,
-    "Total Status Codes": data.status_codes ? data.status_codes.length : 0
+    "Total Status Codes": data.status_codes_raw ? data.status_codes_raw.length : 0
   };
   summaryDiv.innerHTML = Object.entries(metrics)
-    .map(([k,v]) => `<div class="card text-center"><h3>${k}</h3><p class="text-xl font-bold">${v || 0}</p></div>`)
+    .map(([k,v]) => `<div class="card text-center"><h3>${k}</h3><p class="text-xl font-bold">${v}</p></div>`)
     .join('');
 
   // --- Pie Chart ---
+  const errors = data.errors || 0;
+  const warnings = data.warnings || 0;
+  const info = data.info || 0;
+  const total = errors + warnings + info;
+  const pieData = total > 0 ? [errors, warnings, info] : [1]; // if no data, single slice
+  const pieColors = total > 0 ? ['#f85149', '#f0ad4e', '#58a6ff'] : ['#ffffff']; // white circle if no data
+
   new Chart(document.getElementById('summaryPie'), {
     type: 'doughnut',
     data: {
-      labels: ['Errors', 'Warnings', 'Info'],
+      labels: total > 0 ? ['Errors', 'Warnings', 'Info'] : ['No Data'],
       datasets: [{
-        data: [data.errors, data.warnings, data.info],
-        backgroundColor: ['#f85149', '#f0ad4e', '#58a6ff']
+        data: pieData,
+        backgroundColor: pieColors
       }]
     },
-    options: { plugins: { legend: { labels: { color: '#fff' } } } }
+    options: {
+      plugins: { legend: { labels: { color: '#fff' } } },
+      cutout: '70%'
+    }
   });
 
   // --- Timeline Chart ---
@@ -176,35 +205,58 @@ async function loadResults() {
         }]
       },
       options: {
-        scales: { x: { ticks: { color: '#ddd' } }, y: { ticks: { color: '#ddd' } } },
+        scales: {
+          x: { ticks: { color: '#ddd' } },
+          y: { ticks: { color: '#ddd' }, beginAtZero: true }
+        },
         plugins: { legend: { labels: { color: '#fff' } } }
       }
     });
+  } else {
+    const ctx = document.getElementById('timelineChart').getContext('2d');
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   }
 
   // --- IP Table ---
   const ipTable = document.querySelector("#ipTable tbody");
-  if (data.unique_ips && data.unique_ips.length > 0)
+  if (data.unique_ips && data.unique_ips.length > 0) {
     ipTable.innerHTML = data.unique_ips.slice(0,10).map(ip => `<tr><td>${ip}</td></tr>`).join('');
+  } else {
+    ipTable.innerHTML = `<tr><td class="text-center text-gray-500">No IP addresses found</td></tr>`;
+  }
 
   // --- Status Table ---
   const statusTable = document.querySelector("#statusTable tbody");
-  if (data.top_status_codes)
-    statusTable.innerHTML = Object.entries(data.top_status_codes).map(([code,count]) => `<tr><td>${code}</td><td>${count}</td></tr>`).join('');
+  if (data.top_status_codes && Object.keys(data.top_status_codes).length > 0) {
+    statusTable.innerHTML = Object.entries(data.top_status_codes).map(([code,count]) =>
+      `<tr><td>${code}</td><td>${count}</td></tr>`).join('');
+  } else {
+    statusTable.innerHTML = `<tr><td colspan="2" class="text-center text-gray-500">No status codes found</td></tr>`;
+  }
 
   // --- Endpoint Table ---
   const endpointTable = document.querySelector("#endpointTable tbody");
-  if (data.top_endpoints)
-    endpointTable.innerHTML = Object.entries(data.top_endpoints).map(([ep,count]) => `<tr><td>${ep}</td><td>${count}</td></tr>`).join('');
+  if (data.top_endpoints && Object.keys(data.top_endpoints).length > 0) {
+    endpointTable.innerHTML = Object.entries(data.top_endpoints).map(([ep,count]) =>
+      `<tr><td>${ep}</td><td>${count}</td></tr>`).join('');
+  } else {
+    endpointTable.innerHTML = `<tr><td colspan="2" class="text-center text-gray-500">No access endpoints found</td></tr>`;
+  }
 
   // --- Security Alerts ---
   const alertsDiv = document.getElementById("securityAlerts");
   const alerts = [];
-  if (data.detected_attacks) {
-    if (data.detected_attacks.sqli) alerts.push(`🧨 SQL Injection attempts detected: ${data.detected_attacks.sqli}`);
-    if (data.detected_attacks.xss) alerts.push(`🕵️‍♂️ XSS activity: ${data.detected_attacks.xss}`);
-    if (data.detected_attacks.bruteforce) alerts.push(`🔐 Brute-force login attempts: ${data.detected_attacks.bruteforce}`);
+  if (data.security_summary) {
+    const riskScore = data.security_summary.risk_score || 0;
+    const messages = data.security_summary.messages || [];
+
+    if (riskScore > 20) {
+      alerts.push(`<strong>Security Risk Score: ${riskScore}</strong>`);
+    }
+
+    messages.forEach(msg => alerts.push(msg));
   }
+
   alertsDiv.innerHTML = alerts.length
     ? `<ul>${alerts.map(a => `<li>${a}</li>`).join('')}</ul>`
     : `<p class="text-gray-400">No major security threats detected.</p>`;

@@ -1,5 +1,5 @@
 {
-  "total_lines": 22,
+  "total_lines": 20,
   "errors": 1,
   "warnings": 14,
   "info": 5,
@@ -139,16 +139,12 @@
       "count": 1
     }
   ],
-  "urls_sample": [
-    "https://chatgpt.com/c/69059619-612c-8320-bb32-686e0ffed7c"
-  ],
   "top_endpoints": {},
   "file_paths_sample": [
     "/5.0",
     "/7.88.0",
     "/1.7.9",
-    "/2.31.0",
-    "s://chatgpt.com/c/69059619-612c-8320-bb32-686e0ffed7c"
+    "/2.31.0"
   ],
   "key_value_pairs_count": 72,
   "key_value_pairs_sample": [
@@ -321,5 +317,5 @@
   "format_guess": "unknown",
   "detected_format": "unknown",
   "log_type_detected": "unknown",
-  "generated_at": "2025-11-01 12:03:00 UTC"
+  "generated_at": "2025-11-01 12:10:03 UTC"
 }

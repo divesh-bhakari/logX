@@ -1,0 +1,5 @@
+2025-11-01 15:05:27,401 app WARNING SuspiciousInput: POST /comments from 198.51.100.12 - param=comment - value="<script>document.cookie</script>"
+2025-11-01 15:05:27,402 app INFO InputSanitizer: Escaped 1 dangerous token from request.form['comment'] for session=ses_4f3a2c
+2025-11-01 15:16:20,005 app WARNING XSSPatternMatch: Query param 'lang' matches XSS regex for IP 198.51.100.12
+2025-11-01 15:21:09,778 app WARNING PotentialCSExfil: GET /product/53?ref=... - payload includes 'fetch(' - client=203.0.113.99
+2025-11-01 15:21:09,779 app DEBUG Session: Created alert record id=alert_20251101_152109 for type=stored-xss, src_ip=203.0.113.99, severity=medium

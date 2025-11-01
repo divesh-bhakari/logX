@@ -1,4 +1,3 @@
-# app.py
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, send_file
 import mysql.connector
 import os
@@ -155,7 +154,7 @@ def analyze_logs_universal(content):
     # containers
     ips = []
     status_codes = []
-    timestamps = []      # store normalized ISO strings
+    timestamps = []       # store normalized ISO strings
     emails = set()
     urls = []
     methods = []
@@ -390,9 +389,10 @@ def analyze_logs_universal(content):
         out["top_status_codes"] = dict(Counter(status_codes).most_common(10))
 
     if timestamps:
-        out["timestamps_sample"] = sorted(list({t for t in timestamps}))[:200]
+        out["timestamps"] = sorted(list({t for t in timestamps}))[:200]  # Changed key to 'timestamps' for result.html compatibility
         # timeline as sorted list of {bucket, count}
-        out["timeline"] = [{"bucket": k, "count": v} for k, v in sorted(timeline.items())]
+        timeline_list = [{"bucket": k, "count": v} for k, v in sorted(timeline.items())]
+        out["timeline"] = timeline_list  # keep timeline for completeness
 
     if emails:
         out["emails"] = sorted(list(emails))
@@ -403,11 +403,11 @@ def analyze_logs_universal(content):
     if methods:
         out["http_methods_count"] = dict(Counter(methods).most_common())
 
+    # For endpoints, if none found, send empty dict for frontend to show friendly fallback
     if endpoints:
         out["top_endpoints"] = dict(Counter(endpoints).most_common(30))
     else:
-        # graceful fallback so frontend won't show an empty table
-        out["top_endpoints"] = {"No endpoints found": 0}
+        out["top_endpoints"] = {}
 
     if user_agents:
         out["user_agents_sample"] = user_agents[:50]
@@ -459,12 +459,14 @@ def analyze_logs_universal(content):
         errors_count, warnings_count, failed_login_count,
         len(sqli_samples), len(xss_samples), len(bruteforce_findings), total_lines
     )
+    
+    # Make the summary messages and risk_score available directly in a top-level field for frontend use
     out["security_summary"] = {
         "risk_score": risk_score,
         "messages": risk_messages
     }
 
-    # Log format heuristics (friendly names)
+    # For frontend "Detected Log Type" display, add friendly log type guess string
     format_candidates = detect_log_formats(content, out)
     if format_candidates:
         out["format_candidates"] = format_candidates
@@ -472,7 +474,11 @@ def analyze_logs_universal(content):
     else:
         out["format_guess"] = "unknown"
 
-    # optional geo
+    # Put a clear field for detected log type with descriptive name (not numeric)
+    out["detected_format"] = out.get("format_guess", "unknown")
+    out["log_type_detected"] = out.get("detected_format")
+
+    # Optional geo
     if GEOIP_AVAILABLE and out.get("top_ips"):
         try:
             reader = geoip2.database.Reader(MAXMIND_DB_PATH)
@@ -494,7 +500,7 @@ def analyze_logs_universal(content):
             pass
 
     out["generated_at"] = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
-    out["log_type_detected"] = "auto"
+
     return out
 
 # ----------------- helper functions -----------------

