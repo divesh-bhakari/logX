@@ -1,0 +1,329 @@
+{
+  "total_lines": 22,
+  "errors": 1,
+  "warnings": 14,
+  "info": 5,
+  "failed_logins": 14,
+  "unique_ips": [
+    "192.0.2.10",
+    "198.51.100.27",
+    "198.51.100.7",
+    "203.0.113.21",
+    "203.0.113.88"
+  ],
+  "top_ips": {
+    "192.0.2.10": 20,
+    "198.51.100.7": 7,
+    "198.51.100.27": 5,
+    "203.0.113.88": 5,
+    "203.0.113.21": 3
+  },
+  "status_codes_raw": [
+    "192",
+    "198",
+    "100",
+    "192",
+    "198",
+    "100",
+    "192",
+    "198",
+    "100",
+    "192",
+    "198",
+    "100",
+    "192",
+    "198",
+    "100",
+    "192",
+    "198",
+    "100",
+    "192",
+    "198",
+    "100",
+    "192",
+    "203",
+    "113",
+    "192",
+    "203",
+    "113",
+    "192",
+    "203",
+    "113",
+    "192",
+    "198",
+    "100",
+    "192",
+    "198",
+    "100",
+    "192",
+    "198",
+    "100",
+    "192",
+    "198",
+    "100",
+    "192",
+    "198",
+    "100",
+    "192",
+    "203",
+    "113",
+    "192",
+    "203",
+    "113",
+    "192",
+    "203",
+    "113",
+    "192",
+    "203",
+    "113",
+    "192",
+    "203",
+    "113"
+  ],
+  "top_status_codes": {
+    "192": 20,
+    "198": 12,
+    "100": 12,
+    "203": 8,
+    "113": 8
+  },
+  "timestamps_sample": [
+    "2025-11-01 14:40:02",
+    "2025-11-01 14:40:04",
+    "2025-11-01 14:40:07",
+    "2025-11-01 14:40:11",
+    "2025-11-01 14:41:00",
+    "2025-11-01 14:41:02",
+    "2025-11-01 14:41:10",
+    "2025-11-01 14:50:33",
+    "2025-11-01 14:51:12",
+    "2025-11-01 14:51:59",
+    "2025-11-01 15:00:01",
+    "2025-11-01 15:00:02",
+    "2025-11-01 15:00:03",
+    "2025-11-01 15:00:04",
+    "2025-11-01 15:00:05",
+    "2025-11-01 15:10:22",
+    "2025-11-01 15:10:34",
+    "2025-11-01 15:10:46",
+    "2025-11-01 15:10:58",
+    "2025-11-01 15:11:01"
+  ],
+  "timeline": [
+    {
+      "bucket": "2025-11-01 14:40",
+      "count": 4
+    },
+    {
+      "bucket": "2025-11-01 14:41",
+      "count": 3
+    },
+    {
+      "bucket": "2025-11-01 14:50",
+      "count": 1
+    },
+    {
+      "bucket": "2025-11-01 14:51",
+      "count": 2
+    },
+    {
+      "bucket": "2025-11-01 15:00",
+      "count": 6
+    },
+    {
+      "bucket": "2025-11-01 15:10",
+      "count": 4
+    },
+    {
+      "bucket": "2025-11-01 15:11",
+      "count": 1
+    }
+  ],
+  "urls_sample": [
+    "https://chatgpt.com/c/69059619-612c-8320-bb32-686e0ffed7c"
+  ],
+  "top_endpoints": {
+    "No endpoints found": 0
+  },
+  "file_paths_sample": [
+    "/5.0",
+    "/7.88.0",
+    "/1.7.9",
+    "/2.31.0",
+    "s://chatgpt.com/c/69059619-612c-8320-bb32-686e0ffed7c"
+  ],
+  "key_value_pairs_count": 72,
+  "key_value_pairs_sample": [
+    {
+      "username": "admin"
+    },
+    {
+      "ip": "198.51.100.7"
+    },
+    {
+      "user_agent": "Mozilla/5.0"
+    },
+    {
+      "reason": "invalid"
+    },
+    {
+      "username": "admin"
+    },
+    {
+      "ip": "198.51.100.7"
+    },
+    {
+      "user_agent": "Mozilla/5.0"
+    },
+    {
+      "reason": "invalid"
+    },
+    {
+      "username": "admin"
+    },
+    {
+      "ip": "198.51.100.7"
+    },
+    {
+      "user_agent": "Mozilla/5.0"
+    },
+    {
+      "reason": "invalid"
+    },
+    {
+      "username": "admin"
+    },
+    {
+      "ip": "198.51.100.7"
+    },
+    {
+      "user_agent": "curl/7.88.0"
+    },
+    {
+      "reason": "invalid"
+    },
+    {
+      "ip": "198.51.100.7"
+    },
+    {
+      "attempts": "4"
+    },
+    {
+      "username": "admin"
+    },
+    {
+      "ip": "198.51.100.7"
+    },
+    {
+      "user_agent": "sqlmap/1.7.9#stable"
+    },
+    {
+      "reason": "invalid"
+    },
+    {
+      "ip": "198.51.100.7"
+    },
+    {
+      "username": "john.doe"
+    },
+    {
+      "ip": "203.0.113.21"
+    },
+    {
+      "user_agent": "Mozilla/5.0"
+    },
+    {
+      "reason": "invalid"
+    },
+    {
+      "username": "john.doe"
+    },
+    {
+      "ip": "203.0.113.21"
+    },
+    {
+      "user_agent": "Mozilla/5.0"
+    },
+    {
+      "reason": "invalid"
+    },
+    {
+      "username": "john.doe"
+    },
+    {
+      "ip": "203.0.113.21"
+    },
+    {
+      "count": "3"
+    },
+    {
+      "username": "root"
+    },
+    {
+      "ip": "198.51.100.27"
+    },
+    {
+      "user_agent": "python-requests/2.31.0"
+    },
+    {
+      "reason": "invalid"
+    },
+    {
+      "username": "root"
+    },
+    {
+      "ip": "198.51.100.27"
+    },
+    {
+      "user_agent": "python-requests/2.31.0"
+    },
+    {
+      "reason": "invalid"
+    },
+    {
+      "username": "root"
+    },
+    {
+      "ip": "198.51.100.27"
+    },
+    {
+      "user_agent": "python-requests/2.31.0"
+    },
+    {
+      "reason": "invalid"
+    },
+    {
+      "username": "root"
+    },
+    {
+      "ip": "198.51.100.27"
+    },
+    {
+      "user_agent": "python-requests/2.31.0"
+    },
+    {
+      "reason": "invalid"
+    }
+  ],
+  "response_size_bytes": {
+    "count": 20,
+    "min": 7,
+    "max": 88,
+    "avg": 34.35
+  },
+  "security_summary": {
+    "risk_score": 75,
+    "messages": [
+      "High risk \u2014 immediate investigation recommended.",
+      "Detected 1 error lines.",
+      "Detected 14 warnings.",
+      "14 failed login attempts found."
+    ]
+  },
+  "format_candidates": [
+    "web_access_log"
+  ],
+  "format_guess": "web_access_log",
+  "generated_at": "2025-11-01 11:53:32 UTC",
+  "log_type_detected": "auto"
+}
