@@ -1,0 +1,20 @@
+2025-11-01T14:40:02+05:30 192.0.2.10 auth WARNING Failed login - username=admin - ip=198.51.100.7 - user_agent="Mozilla/5.0" - reason="invalid password"
+2025-11-01T14:40:04+05:30 192.0.2.10 auth WARNING Failed login - username=admin - ip=198.51.100.7 - user_agent="Mozilla/5.0" - reason="invalid password"
+2025-11-01T14:40:07+05:30 192.0.2.10 auth WARNING Failed login - username=admin - ip=198.51.100.7 - user_agent="Mozilla/5.0" - reason="invalid password"
+2025-11-01T14:40:11+05:30 192.0.2.10 auth WARNING Failed login - username=admin - ip=198.51.100.7 - user_agent="curl/7.88.0" - reason="invalid password"
+2025-11-01T14:41:00+05:30 192.0.2.10 auth INFO Lockout check for ip=198.51.100.7 -> attempts=4
+2025-11-01T14:41:02+05:30 192.0.2.10 auth WARNING Failed login - username=admin - ip=198.51.100.7 - user_agent="sqlmap/1.7.9#stable" - reason="invalid password"
+2025-11-01T14:41:10+05:30 192.0.2.10 auth ERROR AccountLock: ip=198.51.100.7 temporarily blocked for 15m after 6 failed attempts
+2025-11-01T14:50:33+05:30 192.0.2.10 auth WARNING Failed login - username=john.doe - ip=203.0.113.21 - user_agent="Mozilla/5.0 (iPhone)" - reason="invalid password"
+2025-11-01T14:51:12+05:30 192.0.2.10 auth WARNING Failed login - username=john.doe - ip=203.0.113.21 - user_agent="Mozilla/5.0 (iPhone)" - reason="invalid password"
+2025-11-01T14:51:59+05:30 192.0.2.10 auth INFO Notice: Multiple failed attempts for username=john.doe from ip=203.0.113.21 count=3
+2025-11-01T15:00:01+05:30 192.0.2.10 auth WARNING Failed login - username=root - ip=198.51.100.27 - user_agent="python-requests/2.31.0" - reason="invalid password"
+2025-11-01T15:00:02+05:30 192.0.2.10 auth WARNING Failed login - username=root - ip=198.51.100.27 - user_agent="python-requests/2.31.0" - reason="invalid password"
+2025-11-01T15:00:03+05:30 192.0.2.10 auth WARNING Failed login - username=root - ip=198.51.100.27 - user_agent="python-requests/2.31.0" - reason="invalid password"
+2025-11-01T15:00:04+05:30 192.0.2.10 auth WARNING Failed login - username=root - ip=198.51.100.27 - user_agent="python-requests/2.31.0" - reason="invalid password"
+2025-11-01T15:00:05+05:30 192.0.2.10 auth INFO BruteForceDetector: Threshold=5 reached for ip=198.51.100.27 - lockout applied 2025-11-01T15:00:05+05:30 duration=30m
+2025-11-01T15:10:22+05:30 192.0.2.10 auth WARNING Failed login - username=alice - ip=203.0.113.88 - user_agent="Mozilla/5.0" - reason="invalid password"
+2025-11-01T15:10:34+05:30 192.0.2.10 auth WARNING Failed login - username=alice - ip=203.0.113.88 - user_agent="Mozilla/5.0" - reason="invalid password"
+2025-11-01T15:10:46+05:30 192.0.2.10 auth WARNING Failed login - username=alice - ip=203.0.113.88 - user_agent="Mozilla/5.0" - reason="invalid password"
+2025-11-01T15:10:58+05:30 192.0.2.10 auth INFO Notice: Multiple failed attempts for username=alice from ip=203.0.113.88 count=4
+2025-11-01T15:11:01+05:30 192.0.2.10 auth INFO RealUserLogin: Successful login - username=alice - ip=203.0.113.88 - user_agent="Mozilla/5.0" - method="password"
