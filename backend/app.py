@@ -1,22 +1,24 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 import mysql.connector
 import os
 import re
 import json
 from datetime import datetime
 from collections import Counter
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__, template_folder="static")
+app.secret_key = "supersecretkey"  # required for session management
 
 # ========== DATABASE CONNECTION ==========
 try:
     db = mysql.connector.connect(
         host="localhost",
         user="root",
-        password="Divesh@123",  # Replace with your password
+        password="Divesh@123",
         database="logx_db"
     )
-    cursor = db.cursor()
+    cursor = db.cursor(dictionary=True)
     print("✅ Connected to MySQL and ensured database exists.")
 except mysql.connector.Error as err:
     print(f"❌ MySQL Connection Failed: {err}")
@@ -27,10 +29,75 @@ REPORT_FOLDER = "reports"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(REPORT_FOLDER, exist_ok=True)
 
-# ========== INDEX ROUTE ==========
+# ========== ROUTES ==========
+
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@app.route("/login")
+def login_page():
+    return render_template("login.html")
+
+@app.route("/register")
+def register_page():
+    return render_template("register.html")
+
+@app.route("/result/<filename>")
+def result_page(filename):
+    report_path = os.path.join(REPORT_FOLDER, f"{filename}.json")
+    if not os.path.exists(report_path):
+        return jsonify({"error": "Report not found"}), 404
+    with open(report_path, "r") as f:
+        result = json.load(f)
+    return render_template("result.html", result=result)
+
+# ========== AUTHENTICATION ROUTES ==========
+
+@app.route("/api/register", methods=["POST"])
+def register_user():
+    data = request.get_json()
+    name = data.get("name")
+    email = data.get("email")
+    password = data.get("password")
+
+    if not name or not email or not password:
+        return jsonify({"error": "All fields required"}), 400
+
+    cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
+    if cursor.fetchone():
+        return jsonify({"error": "Email already registered"}), 400
+
+    hashed_pw = generate_password_hash(password)
+    cursor.execute(
+        "INSERT INTO users (name, email, password) VALUES (%s, %s, %s)",
+        (name, email, hashed_pw)
+    )
+    db.commit()
+    return jsonify({"message": "Registration successful"}), 200
+
+
+@app.route("/api/login", methods=["POST"])
+def login_user():
+    data = request.get_json()
+    email = data.get("email")
+    password = data.get("password")
+
+    cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
+    user = cursor.fetchone()
+
+    if not user or not check_password_hash(user["password"], password):
+        return jsonify({"error": "Invalid email or password"}), 401
+
+    session["user_id"] = user["id"]
+    session["user_name"] = user["name"]
+    return jsonify({"message": "Login successful"}), 200
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("index"))
 
 # ========== UPLOAD ROUTE ==========
 @app.route("/upload", methods=["POST"])
@@ -38,7 +105,6 @@ def upload_logs():
     log_type = request.form.get("log_type", "custom")
     pasted_logs = request.form.get("pasted_logs")
 
-    # Case 1 — File uploaded
     if 'file' in request.files and request.files['file'].filename != '':
         file = request.files['file']
         filename = file.filename
@@ -46,7 +112,6 @@ def upload_logs():
         file.save(filepath)
         with open(filepath, "r", errors='ignore') as f:
             log_data = f.read()
-    # Case 2 — Logs pasted manually
     elif pasted_logs:
         filename = f"pasted_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
         filepath = os.path.join(UPLOAD_FOLDER, filename)
@@ -56,33 +121,18 @@ def upload_logs():
     else:
         return jsonify({"error": "No log data provided"}), 400
 
-    # Store in MySQL
     cursor.execute(
         "INSERT INTO logs (filename, log_content, log_type) VALUES (%s, %s, %s)",
         (filename, log_data, log_type)
     )
     db.commit()
 
-    # Analyze logs immediately
     result = analyze_logs(log_data, log_type)
-
-    # Save JSON report
     report_path = os.path.join(REPORT_FOLDER, f"{filename}.json")
     with open(report_path, "w") as f:
         json.dump(result, f, indent=4)
 
-    # Redirect to result page (Flask redirect returns 302 with URL)
     return redirect(url_for("result_page", filename=filename))
-
-# ========== RESULT ROUTE ==========
-@app.route("/result/<filename>")
-def result_page(filename):
-    report_path = os.path.join(REPORT_FOLDER, f"{filename}.json")
-    if not os.path.exists(report_path):
-        return jsonify({"error": "Report not found"}), 404
-    with open(report_path, "r") as f:
-        result = json.load(f)
-    return render_template("result.html", result=result)
 
 # ========== LOG ANALYSIS ENGINE ==========
 def analyze_logs(content, log_type):
@@ -142,31 +192,20 @@ def analyze_logs(content, log_type):
 
     return result
 
-# ======= SPECIFIC ANALYSIS FUNCTIONS =======
 def analyze_system_logs(content):
     boots = len(re.findall(r"boot", content, re.IGNORECASE))
     shutdowns = len(re.findall(r"shutdown", content, re.IGNORECASE))
     kernel = len(re.findall(r"kernel", content, re.IGNORECASE))
-    return {
-        "system_boots": boots,
-        "system_shutdowns": shutdowns,
-        "kernel_events": kernel
-    }
+    return {"system_boots": boots, "system_shutdowns": shutdowns, "kernel_events": kernel}
 
 def analyze_server_logs(content):
     methods = re.findall(r"\b(GET|POST|PUT|DELETE|PATCH|OPTIONS)\b", content)
     endpoints = re.findall(r"\"(GET|POST|PUT|DELETE|PATCH|OPTIONS) (.*?) HTTP", content)
-    return {
-        "http_methods_count": dict(Counter(methods)),
-        "top_endpoints": dict(Counter([e[1] for e in endpoints]).most_common(5))
-    }
+    return {"http_methods_count": dict(Counter(methods)), "top_endpoints": dict(Counter([e[1] for e in endpoints]).most_common(5))}
 
 def analyze_custom_logs(content):
     kv_pairs = re.findall(r"(\w+)=([\w\d\._-]+)", content)
-    return {
-        "key_value_pairs_found": len(kv_pairs),
-        "sample_pairs": kv_pairs[:5]
-    }
+    return {"key_value_pairs_found": len(kv_pairs), "sample_pairs": kv_pairs[:5]}
 
 # ========== MAIN ==========
 if __name__ == "__main__":
