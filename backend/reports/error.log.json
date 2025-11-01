@@ -1,0 +1,24 @@
+{
+    "total_lines": 421,
+    "errors": 421,
+    "warnings": 0,
+    "info": 0,
+    "unique_ips": [
+        "127.0.0.1"
+    ],
+    "status_codes": [],
+    "timestamps": [],
+    "failed_logins": 0,
+    "log_type": "server",
+    "top_status_codes": {},
+    "http_methods_count": {
+        "GET": 421
+    },
+    "top_endpoints": {
+        "/nonexistentpage": 20,
+        "/nonexistent1": 2,
+        "/nonexistent2": 2,
+        "/nonexistent3": 2,
+        "/nonexistent4": 2
+    }
+}
