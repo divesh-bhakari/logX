@@ -611,10 +611,11 @@ def download_report(filename):
     cw = csv.writer(si)
     cw.writerow(["Metric", "Value"])
     for key, value in result.items():
-        cw.writerow([key, json.dumps(value) if isinstance(value, (dict, list)) else value])
-    si.seek(0)
-    return send_file(StringIO(si.getvalue()), mimetype="text/csv", as_attachment=True, download_name=f"{filename}_report.csv")
-
+     cw.writerow([key, json.dumps(value) if isinstance(value, (dict, list)) else value])
+    csv_bytes = si.getvalue().encode('utf-8')
+    buffer = BytesIO(csv_bytes)
+    buffer.seek(0)
+    return send_file(buffer, mimetype='text/csv', as_attachment=True, download_name=f"{filename}_report.csv")
 # ----------------- RUN -----------------
 if __name__ == "__main__":
     app.run(debug=True)

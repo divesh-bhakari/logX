@@ -1,0 +1,35 @@
+2025-10-31 08:12:44 INFO  systemd[1]: Starting Daily apt download activities...
+2025-10-31 08:12:44 INFO  systemd[1]: Started Daily apt download activities.
+2025-10-31 08:12:49 INFO  kernel: [  123.556789] eth0: Link is Up - 1Gbps Full Duplex
+2025-10-31 08:13:01 INFO  CRON[1024]: (root) CMD (apt-get update)
+2025-10-31 08:13:07 INFO  apache2[2345]: 192.168.1.15 - - [31/Oct/2025:08:13:07 +0530] "GET /index.html HTTP/1.1" 200 5324 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+2025-10-31 08:13:08 WARN  apache2[2346]: 192.168.1.18 - - [31/Oct/2025:08:13:08 +0530] "GET /admin HTTP/1.1" 403 289 "-"
+2025-10-31 08:13:12 INFO  sshd[2451]: Accepted password for admin from 192.168.1.20 port 55214 ssh2
+2025-10-31 08:13:13 WARN  sshd[2451]: Failed password for invalid user test from 185.202.1.22 port 44819 ssh2
+2025-10-31 08:13:14 ALERT sshd[2451]: Possible brute-force detected from 185.202.1.22 - 5 failed attempts in 30 seconds
+2025-10-31 08:13:15 ERROR app[3001]: Database connection timeout (mysql-prod:3306)
+2025-10-31 08:13:17 INFO  nginx[3221]: 10.0.0.14 - - [31/Oct/2025:08:13:17 +0530] "POST /api/login HTTP/1.1" 200 948 "-" "curl/7.74.0"
+2025-10-31 08:13:19 WARN  nginx[3221]: 10.0.0.14 - - [31/Oct/2025:08:13:19 +0530] "GET /api/admin/config HTTP/1.1" 401 198 "-"
+2025-10-31 08:13:21 INFO  app[3002]: [User: john_doe] Accessed /dashboard
+2025-10-31 08:13:24 ERROR app[3002]: [User: unknown] SQL Injection attempt detected: ' OR 1=1; --
+2025-10-31 08:13:26 INFO  systemd[1]: Started Clean PHP session files.
+2025-10-31 08:13:30 WARN  app[3002]: High memory usage detected: 88% (PID 3002)
+2025-10-31 08:13:35 INFO  apache2[2345]: 192.168.1.17 - - [31/Oct/2025:08:13:35 +0530] "GET /favicon.ico HTTP/1.1" 404 209
+2025-10-31 08:13:40 ERROR app[3001]: Unauthorized access to /api/admin/settings from IP 10.10.10.23
+2025-10-31 08:13:42 ALERT firewall[1550]: Dropped incoming connection from blacklisted IP 185.202.1.22
+2025-10-31 08:13:49 INFO  app[3002]: Scheduled backup completed successfully (size: 42MB)
+2025-10-31 08:13:54 WARN  systemd[1]: CPU temperature above threshold (85°C)
+2025-10-31 08:13:57 ERROR kernel: [  189.671002] EXT4-fs error (device sda1): ext4_find_entry:1455: inode #129045: comm apache2: reading directory lblock 0
+2025-10-31 08:14:01 INFO  apache2[2345]: 192.168.1.16 - - [31/Oct/2025:08:14:01 +0530] "GET /report.pdf HTTP/1.1" 200 104234 "-"
+2025-10-31 08:14:03 WARN  app[3002]: Suspicious request pattern detected from 10.10.10.23 - potential XSS
+2025-10-31 08:14:05 INFO  systemd[1]: Finished Log rotation service.
+2025-10-31 08:14:08 ALERT nginx[3221]: DDoS protection triggered: 250 requests/min from 103.11.22.33
+2025-10-31 08:14:15 INFO  sshd[2451]: Disconnected from 192.168.1.20 port 55214
+2025-10-31 08:14:20 ERROR app[3002]: Application crashed due to unhandled exception (MemoryError)
+2025-10-31 08:14:23 INFO  systemd[1]: Restarting app.service due to crash...
+2025-10-31 08:14:27 INFO  app[3002]: Application restarted successfully
+2025-10-31 08:14:30 INFO  apache2[2345]: 192.168.1.25 - - [31/Oct/2025:08:14:30 +0530] "GET /healthcheck HTTP/1.1" 200 123 "-"
+2025-10-31 08:14:32 INFO  security_audit[4050]: Integrity check passed for /usr/bin/sshd
+2025-10-31 08:14:35 WARN  security_audit[4050]: Hash mismatch detected in /var/www/html/admin/config.php
+2025-10-31 08:14:39 ALERT IDS[5090]: Detected Port Scan from 91.143.75.9 targeting port range 20-80
+2025-10-31 08:14:45 INFO  systemd[1]: Completed daily security scan.
