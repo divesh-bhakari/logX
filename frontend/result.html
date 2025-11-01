@@ -2,69 +2,272 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>LogX Analysis Results</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LogX — Analysis Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 <style>
   body {
-    font-family: Arial, sans-serif;
-    background: #0d1117;
+    background-color: #0d1117;
     color: #e6edf3;
-    margin: 0;
-    padding: 0;
+    font-family: 'Inter', sans-serif;
   }
-  header {
-    background: #161b22;
-    padding: 20px;
-    text-align: center;
-    font-size: 28px;
-    font-weight: bold;
+  .card {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.4);
+    transition: all 0.3s ease;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 18px rgba(56,139,253,0.4);
+  }
+  h1, h2, h3 {
     color: #58a6ff;
   }
-  main {
-    width: 80%;
-    margin: 30px auto;
-    background: #161b22;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px #0b0f13;
-  }
-  h2 {
-    color: #58a6ff ;
-  }
-  pre {
-    background: #0d1117;
-    padding: 15px;
-    border-radius: 6px;
-    overflow-x: auto;
-    border: 1px solid #30363d;
-  }
-  button {
-    background: #238636;
-    border: none;
+  .btn {
+    background-color: #238636;
+    color: white;
     padding: 10px 20px;
     border-radius: 6px;
-    cursor: pointer;
-    color: white;
     font-weight: bold;
-    margin-top: 20px;
+    transition: 0.2s;
   }
-  button:hover {
-    background: #2ea043;
+  .btn:hover { background-color: #2ea043; }
+  .section-title {
+    border-left: 4px solid #58a6ff;
+    padding-left: 8px;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  th, td {
+    border: 1px solid #30363d;
+    padding: 8px;
+    text-align: left;
+  }
+  th {
+    background-color: #21262d;
+  }
+  td.text-center {
+    text-align: center;
+    color: #888;
   }
 </style>
 </head>
-<body>
-<header>LogX Analysis Results</header>
-<main>
-  <h2>Log Summary</h2>
-  <div id="resultsDiv">
-    <pre>{{ result | tojson(indent=2) }}</pre>
-  </div>
-  <button onclick="goHome()">Analyze Another Log</button>
-</main>
+<body class="p-6">
+  <header class="text-center mb-8">
+    <h1 class="text-4xl font-bold text-blue-400">LogX — Universal Log Analysis Report</h1>
+    <p class="text-gray-400 mt-2">Advanced Log Intelligence | Security | Insights</p>
+  </header>
+
+  <main class="space-y-8 max-w-6xl mx-auto">
+    <!-- Summary Section -->
+    <section>
+      <h2 class="section-title text-xl">Log Summary</h2>
+      <div id="summaryCards" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+    </section>
+
+    <!-- Visual Charts -->
+    <section class="grid md:grid-cols-2 gap-6">
+      <div class="card">
+        <h3 class="text-lg mb-2">Error / Warning / Info Distribution</h3>
+        <canvas id="summaryPie"></canvas>
+      </div>
+
+      <div class="card">
+        <h3 class="text-lg mb-2">Log Activity Timeline</h3>
+        <canvas id="timelineChart"></canvas>
+      </div>
+    </section>
+
+    <!-- Security Section -->
+    <section>
+      <h2 class="section-title text-xl">🚨 Security Alerts</h2>
+      <div id="securityAlerts" class="card text-sm text-gray-300">
+        <p>No major security threats detected.</p>
+      </div>
+    </section>
+
+    <!-- IP & HTTP Info -->
+    <section class="grid md:grid-cols-2 gap-6">
+      <div class="card">
+        <h3 class="text-lg mb-2">Top IP Addresses</h3>
+        <table id="ipTable">
+          <thead>
+            <tr><th>IP Address</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3 class="text-lg mb-2">Top Status Codes</h3>
+        <table id="statusTable">
+          <thead>
+            <tr><th>Code</th><th>Count</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- HTTP Endpoint Insights -->
+    <section class="card">
+      <h3 class="text-lg mb-2">Most Accessed Endpoints</h3>
+      <table id="endpointTable">
+        <thead>
+          <tr><th>Endpoint</th><th>Hits</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- Control Buttons -->
+    <section class="text-center mt-8">
+      
+      <button class="btn bg-blue-600 hover:bg-blue-700 ml-2" onclick="window.location.href='/'">Back to Home</button>
+      <button class="btn bg-gray-700 hover:bg-gray-600 ml-2" onclick="location.reload()">Refresh</button>
+    </section>
+  </main>
+
 <script>
-function goHome(){
-  window.location.href = "/";
+const filename = window.location.pathname.split("/").pop();
+
+async function loadResults() {
+  const res = await fetch(`/api/result/${filename}`);
+  const data = await res.json();
+
+  // --- Summary Cards ---
+  const summaryDiv = document.getElementById("summaryCards");
+  const metrics = {
+    "Total Lines": data.total_lines,
+    "Errors": data.errors || 0,
+    "Warnings": data.warnings || 0,
+    "Info": data.info || 0,
+    "Failed Logins": data.failed_logins || 0,
+    "Detected Log Type": data.detected_format || data.log_type || "unknown",
+    "Unique IPs": data.unique_ips ? data.unique_ips.length : 0,
+    "Total Status Codes": data.status_codes_raw ? data.status_codes_raw.length : 0
+  };
+  summaryDiv.innerHTML = Object.entries(metrics)
+    .map(([k,v]) => `<div class="card text-center"><h3>${k}</h3><p class="text-xl font-bold">${v}</p></div>`)
+    .join('');
+
+  // --- Pie Chart ---
+  const errors = data.errors || 0;
+  const warnings = data.warnings || 0;
+  const info = data.info || 0;
+  const total = errors + warnings + info;
+  const pieData = total > 0 ? [errors, warnings, info] : [1]; // if no data, single slice
+  const pieColors = total > 0 ? ['#f85149', '#f0ad4e', '#58a6ff'] : ['#ffffff']; // white circle if no data
+
+  new Chart(document.getElementById('summaryPie'), {
+    type: 'doughnut',
+    data: {
+      labels: total > 0 ? ['Errors', 'Warnings', 'Info'] : ['No Data'],
+      datasets: [{
+        data: pieData,
+        backgroundColor: pieColors
+      }]
+    },
+    options: {
+      plugins: { legend: { labels: { color: '#fff' } } },
+      cutout: '70%'
+    }
+  });
+
+  // --- Timeline Chart ---
+  if (data.timestamps && data.timestamps.length > 0) {
+    const timeData = data.timestamps.map(t => moment(t, "YYYY-MM-DD HH:mm:ss").toDate());
+    const grouped = {};
+    timeData.forEach(t => {
+      const d = moment(t).format("YYYY-MM-DD HH:mm");
+      grouped[d] = (grouped[d] || 0) + 1;
+    });
+    new Chart(document.getElementById('timelineChart'), {
+      type: 'line',
+      data: {
+        labels: Object.keys(grouped),
+        datasets: [{
+          label: 'Log Frequency',
+          data: Object.values(grouped),
+          borderColor: '#58a6ff',
+          fill: false,
+          tension: 0.3
+        }]
+      },
+      options: {
+        scales: {
+          x: { ticks: { color: '#ddd' } },
+          y: { ticks: { color: '#ddd' }, beginAtZero: true }
+        },
+        plugins: { legend: { labels: { color: '#fff' } } }
+      }
+    });
+  } else {
+    const ctx = document.getElementById('timelineChart').getContext('2d');
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  }
+
+  // --- IP Table ---
+  const ipTable = document.querySelector("#ipTable tbody");
+  if (data.unique_ips && data.unique_ips.length > 0) {
+    ipTable.innerHTML = data.unique_ips.slice(0,10).map(ip => `<tr><td>${ip}</td></tr>`).join('');
+  } else {
+    ipTable.innerHTML = `<tr><td class="text-center text-gray-500">No IP addresses found</td></tr>`;
+  }
+
+  // --- Status Table ---
+  const statusTable = document.querySelector("#statusTable tbody");
+  if (data.top_status_codes && Object.keys(data.top_status_codes).length > 0) {
+    statusTable.innerHTML = Object.entries(data.top_status_codes).map(([code,count]) =>
+      `<tr><td>${code}</td><td>${count}</td></tr>`).join('');
+  } else {
+    statusTable.innerHTML = `<tr><td colspan="2" class="text-center text-gray-500">No status codes found</td></tr>`;
+  }
+
+  // --- Endpoint Table ---
+  const endpointTable = document.querySelector("#endpointTable tbody");
+  if (data.top_endpoints && Object.keys(data.top_endpoints).length > 0) {
+    endpointTable.innerHTML = Object.entries(data.top_endpoints).map(([ep,count]) =>
+      `<tr><td>${ep}</td><td>${count}</td></tr>`).join('');
+  } else {
+    endpointTable.innerHTML = `<tr><td colspan="2" class="text-center text-gray-500">No access endpoints found</td></tr>`;
+  }
+
+  // --- Security Alerts ---
+  const alertsDiv = document.getElementById("securityAlerts");
+  const alerts = [];
+  if (data.security_summary) {
+    const riskScore = data.security_summary.risk_score || 0;
+    const messages = data.security_summary.messages || [];
+
+    if (riskScore > 20) {
+      alerts.push(`<strong>Security Risk Score: ${riskScore}</strong>`);
+    }
+
+    messages.forEach(msg => alerts.push(msg));
+  }
+
+  alertsDiv.innerHTML = alerts.length
+    ? `<ul>${alerts.map(a => `<li>${a}</li>`).join('')}</ul>`
+    : `<p class="text-gray-400">No major security threats detected.</p>`;
+
+  // --- Download Button ---
+  document.getElementById("downloadBtn").onclick = () => {
+    window.location.href = `/download/${filename}`;
+  };
 }
+
+loadResults();
 </script>
 </body>
 </html>
