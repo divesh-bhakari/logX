@@ -1,1 +1,32 @@
-ECHO is on.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><title>Login – LogX</title>
+<style>
+body{background:#0d1117;color:#e6edf3;font-family:Arial;text-align:center;padding-top:50px}
+form{display:inline-block;background:#161b22;padding:30px;border-radius:10px}
+input{display:block;width:250px;margin:10px auto;padding:10px;border-radius:5px;border:none}
+button{padding:10px 20px;background:#238636;color:white;border:none;border-radius:5px;cursor:pointer}
+button:hover{background:#2ea043}
+</style>
+</head>
+<body>
+<h2>Login to LogX</h2>
+<form id="loginForm">
+<input type="email" name="email" placeholder="Email" required>
+<input type="password" name="password" placeholder="Password" required>
+<button type="submit">Login</button>
+</form>
+<p id="msg"></p>
+<script>
+document.getElementById("loginForm").addEventListener("submit",async(e)=>{
+ e.preventDefault();
+ const data=Object.fromEntries(new FormData(e.target));
+ const res=await fetch("/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+ const j=await res.json();
+ document.getElementById("msg").textContent=j.message;
+ if(res.ok) setTimeout(()=>location.href="/",1000);
+});
+</script>
+</body></html>
+

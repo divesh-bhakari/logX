@@ -2,77 +2,116 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>LogX The Log Sentinel</title>
+<title>LogX - The Log Sentinel</title>
 <style>
+  /* ====== GLOBAL ====== */
   body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
     background: #0d1117;
     color: #e6edf3;
     margin: 0;
     padding: 0;
   }
+
+  /* ====== HEADER ====== */
   header {
     background: #161b22;
-    padding: 20px;
-    text-align: center;
-    font-size: 28px;
-    font-weight: bold;
-    color: #58a6ff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
   }
+
+  .logo {
+    font-size: 26px;
+    font-weight: 700;
+    color: #58a6ff;
+    letter-spacing: 0.5px;
+  }
+
+  .auth-buttons {
+    display: flex;
+    gap: 15px;
+  }
+
+  .auth-buttons a {
+    text-decoration: none;
+    color: white;
+    background: #238636;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background 0.2s ease-in-out;
+  }
+
+  .auth-buttons a:hover {
+    background: #2ea043;
+  }
+
+  /* ====== MAIN ====== */
   main {
     width: 80%;
-    margin: 30px auto;
+    margin: 40px auto;
     background: #161b22;
-    padding: 20px;
+    padding: 30px;
     border-radius: 10px;
-    box-shadow: 0 0 10px #0b0f13;
+    box-shadow: 0 0 12px rgba(0,0,0,0.4);
+    animation: fadeIn 0.4s ease-in-out;
   }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
   h2 {
     color: #58a6ff;
+    margin-bottom: 15px;
   }
+
+  label {
+    font-weight: bold;
+    margin-top: 12px;
+    display: block;
+  }
+
+  select,
+  input[type="file"],
   textarea {
     width: 100%;
-    height: 150px;
-    margin-top: 10px;
+    margin-top: 8px;
     background: #0d1117;
     color: #e6edf3;
     border: 1px solid #30363d;
     border-radius: 6px;
     padding: 10px;
+    font-size: 14px;
+  }
+
+  textarea {
+    height: 160px;
     resize: vertical;
   }
-  input[type="file"], button, select {
-    margin-top: 15px;
-  }
+
   button {
     background: #238636;
     border: none;
-    padding: 10px 20px;
+    padding: 12px 24px;
     border-radius: 6px;
     cursor: pointer;
     color: white;
     font-weight: bold;
+    font-size: 15px;
+    margin-top: 20px;
+    transition: background 0.2s ease-in-out, transform 0.1s;
   }
+
   button:hover {
     background: #2ea043;
+    transform: scale(1.03);
   }
-  label {
-    font-weight: bold;
-    margin-top: 10px;
-    display: block;
-  }
-  footer {
-    text-align: center;
-    margin-top: 20px;
-  }
-  footer a {
-    color: #58a6ff;
-    text-decoration: none;
-    margin: 0 10px;
-  }
-  footer a:hover {
-    text-decoration: underline;
-  }
+
   .response {
     margin-top: 15px;
     background: #0d1117;
@@ -81,10 +120,37 @@
     border: 1px solid #30363d;
     display: none;
   }
+
+  /* ====== FOOTER ====== */
+  footer {
+    text-align: center;
+    margin-top: 40px;
+    color: #8b949e;
+    font-size: 14px;
+  }
+
+  footer a {
+    color: #58a6ff;
+    text-decoration: none;
+    margin: 0 8px;
+  }
+
+  footer a:hover {
+    text-decoration: underline;
+  }
+
 </style>
 </head>
 <body>
-<header>LogX The Log Sentinel</header>
+
+<header>
+  <div class="logo">LogX <span style="color:#8b949e; font-weight:400;">— The Log Sentinel</span></div>
+  <div class="auth-buttons">
+    <a href="/login">Login</a>
+    <a href="/register">Register</a>
+  </div>
+</header>
+
 <main>
   <h2>Upload or Paste Logs for Analysis</h2>
   <form id="uploadForm" method="post" enctype="multipart/form-data">
@@ -103,10 +169,12 @@
 
     <button type="submit" id="analyzeBtn">Analyze Logs</button>
   </form>
+
   <div class="response" id="response"></div>
 </main>
+
 <footer>
-  &copy; 2025 LogX Project
+  &copy; 2025 LogX Project — Built for Secure Log Intelligence
 </footer>
 
 <script>
@@ -125,7 +193,7 @@ document.getElementById("uploadForm").addEventListener("submit", async function(
     formData.append("pasted_logs", pastedLogs);
   } else {
     responseDiv.style.display = "block";
-    responseDiv.textContent = "Please upload a file or paste log data before analyzing.";
+    responseDiv.textContent = "⚠️ Please upload a file or paste log data before analyzing.";
     return;
   }
   formData.append("log_type", logType);
@@ -141,16 +209,14 @@ document.getElementById("uploadForm").addEventListener("submit", async function(
       responseDiv.textContent = error.error || "Failed to analyze logs.";
       return;
     }
-    const resultUrl = response.url; // This is redirected URL from Flask
-
-    // Redirect to the result page
+    const resultUrl = response.url;
     window.location.href = resultUrl;
-
   } catch (err) {
     responseDiv.style.display = "block";
-    responseDiv.textContent = "Error: " + err.message;
+    responseDiv.textContent = "❌ Error: " + err.message;
   }
 });
 </script>
+
 </body>
 </html>
