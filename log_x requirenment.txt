@@ -1,0 +1,35 @@
+# --- Core Web Framework ---
+Flask==3.0.3
+Werkzeug==3.0.4
+itsdangerous==2.2.0
+Jinja2==3.1.4
+
+# --- Database (MySQL) ---
+mysql-connector-python==9.0.0
+PyMySQL==1.1.1
+SQLAlchemy==2.0.35
+Flask-MySQLdb==2.0.0
+
+# --- Security & Authentication ---
+bcrypt==4.2.0
+Flask-Login==0.6.3
+
+# --- Data Parsing, Regex & Analysis ---
+regex==2024.9.11
+pandas==2.2.2
+numpy==2.1.1
+
+# --- File Handling & Report Generation ---
+fpdf==1.7.2
+openpyxl==3.1.5
+python-dotenv==1.0.1
+requests==2.32.3
+
+# --- JSON, CSV, and Utilities ---
+simplejson==3.19.3
+flask-cors==4.0.1
+
+# --- Optional (Deployment / Optimization) ---
+gunicorn==23.0.0
+eventlet==0.36.1
+gevent==24.2.1
