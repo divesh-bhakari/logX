@@ -1,8 +1,10 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, session
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session, send_file
 import mysql.connector
 import os
 import re
 import json
+import csv
+from io import StringIO
 from datetime import datetime
 from collections import Counter
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -206,6 +208,41 @@ def analyze_server_logs(content):
 def analyze_custom_logs(content):
     kv_pairs = re.findall(r"(\w+)=([\w\d\._-]+)", content)
     return {"key_value_pairs_found": len(kv_pairs), "sample_pairs": kv_pairs[:5]}
+
+# ========== API: FETCH RESULT AS JSON ==========
+@app.route("/api/result/<filename>")
+def api_result(filename):
+    report_path = os.path.join(REPORT_FOLDER, f"{filename}.json")
+    if not os.path.exists(report_path):
+        return jsonify({"error": "Report not found"}), 404
+    with open(report_path, "r") as f:
+        result = json.load(f)
+    return jsonify(result)
+
+# ========== DOWNLOAD CSV REPORT ==========
+@app.route("/download/<filename>")
+def download_report(filename):
+    report_path = os.path.join(REPORT_FOLDER, f"{filename}.json")
+    if not os.path.exists(report_path):
+        return jsonify({"error": "Report not found"}), 404
+
+    with open(report_path, "r") as f:
+        result = json.load(f)
+
+    # Convert JSON to CSV
+    si = StringIO()
+    cw = csv.writer(si)
+    cw.writerow(["Metric", "Value"])
+    for key, value in result.items():
+        cw.writerow([key, json.dumps(value) if isinstance(value, (dict, list)) else value])
+    si.seek(0)
+
+    return send_file(
+        StringIO(si.getvalue()),
+        mimetype="text/csv",
+        as_attachment=True,
+        download_name=f"{filename}_report.csv"
+    )
 
 # ========== MAIN ==========
 if __name__ == "__main__":

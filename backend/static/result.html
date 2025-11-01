@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>LogX Analysis Results</title>
+<meta charset="UTF-8">
+<title>LogX Results Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
   body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', sans-serif;
     background: #0d1117;
     color: #e6edf3;
     margin: 0;
@@ -15,9 +16,9 @@
     background: #161b22;
     padding: 20px;
     text-align: center;
-    font-size: 28px;
-    font-weight: bold;
     color: #58a6ff;
+    font-size: 26px;
+    font-weight: bold;
   }
   main {
     width: 80%;
@@ -25,46 +26,103 @@
     background: #161b22;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px #0b0f13;
+    box-shadow: 0 0 15px #0b0f13;
   }
   h2 {
-    color: #58a6ff ;
+    color: #58a6ff;
+    text-align: center;
   }
-  pre {
-    background: #0d1117;
-    padding: 15px;
-    border-radius: 6px;
-    overflow-x: auto;
-    border: 1px solid #30363d;
-  }
-  button {
-    background: #238636;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    cursor: pointer;
-    color: white;
-    font-weight: bold;
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
     margin-top: 20px;
   }
-  button:hover {
+  .card {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+  }
+  .card h3 {
+    color: #58a6ff;
+    margin-bottom: 5px;
+  }
+  #chartContainer {
+    margin-top: 30px;
+    background: #0d1117;
+    padding: 15px;
+    border-radius: 8px;
+  }
+  .btn {
+    display: inline-block;
+    margin-top: 25px;
+    background: #238636;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .btn:hover {
     background: #2ea043;
   }
 </style>
 </head>
 <body>
-<header>LogX Analysis Results</header>
+<header>📊 LogX Analysis Report</header>
 <main>
   <h2>Log Summary</h2>
-  <div id="resultsDiv">
-    <pre>{{ result | tojson(indent=2) }}</pre>
+  <div class="cards" id="summaryCards"></div>
+
+  <div id="chartContainer">
+    <canvas id="logChart"></canvas>
   </div>
-  <button onclick="goHome()">Analyze Another Log</button>
+
+  <div style="text-align:center;">
+    <button class="btn" id="downloadBtn">Download Report (CSV)</button>
+  </div>
 </main>
+
 <script>
-function goHome(){
-  window.location.href = "/";
+const filename = window.location.pathname.split("/").pop();
+
+async function loadResults() {
+  const response = await fetch(`/api/result/${filename}`);
+  const data = await response.json();
+
+  // Summary Cards
+  const summaryDiv = document.getElementById("summaryCards");
+  const mainMetrics = ["total_lines", "errors", "warnings", "info", "failed_logins"];
+  summaryDiv.innerHTML = mainMetrics.map(k => `
+    <div class="card">
+      <h3>${k.replace('_', ' ').toUpperCase()}</h3>
+      <p>${data[k] || 0}</p>
+    </div>
+  `).join('');
+
+  // Pie Chart
+  const ctx = document.getElementById('logChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: ['Errors', 'Warnings', 'Info'],
+      datasets: [{
+        data: [data.errors, data.warnings, data.info],
+        backgroundColor: ['#f85149', '#f0ad4e', '#58a6ff']
+      }]
+    }
+  });
+
+  // Download button
+  document.getElementById("downloadBtn").onclick = () => {
+    window.location.href = `/download/${filename}`;
+  };
 }
+
+loadResults();
 </script>
 </body>
 </html>

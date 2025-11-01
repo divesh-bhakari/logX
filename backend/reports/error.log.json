@@ -9,9 +9,16 @@
     "status_codes": [],
     "timestamps": [],
     "failed_logins": 0,
-    "log_type": "system",
+    "log_type": "server",
     "top_status_codes": {},
-    "system_boots": 0,
-    "system_shutdowns": 0,
-    "kernel_events": 0
+    "http_methods_count": {
+        "GET": 421
+    },
+    "top_endpoints": {
+        "/nonexistentpage": 20,
+        "/nonexistent1": 2,
+        "/nonexistent2": 2,
+        "/nonexistent3": 2,
+        "/nonexistent4": 2
+    }
 }
